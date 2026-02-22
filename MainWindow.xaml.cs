@@ -110,6 +110,7 @@ public partial class MainWindow : Window
         BtnStop.IsEnabled = true;
         BtnAdd.IsEnabled = true;
         BtnClear.IsEnabled = true;
+        CmbScreens.IsEnabled = false;
         
         var selectedScreen = CmbScreens.SelectedItem as ScreenItem;
         List<Rect> targetScreens = new List<Rect>();
@@ -159,6 +160,7 @@ public partial class MainWindow : Window
         BtnStop.IsEnabled = false;
         BtnAdd.IsEnabled = false;
         BtnClear.IsEnabled = false;
+        CmbScreens.IsEnabled = true;
         
         _manager?.Stop();
         
