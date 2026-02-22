@@ -1,0 +1,9 @@
+<Window x:Class="HamsterDesktopRunners.Views.HamsterDesktopWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HamsterDesktopWindow" 
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="True" ShowInTaskbar="False"
+        Loaded="Window_Loaded">
+    <Canvas x:Name="MainCanvas" Background="Transparent" />
+</Window>
