@@ -104,15 +104,8 @@ public partial class MainWindow : Window
         System.Windows.Application.Current.Shutdown();
     }
 
-    private void BtnStart_Click(object sender, RoutedEventArgs e)
+    private List<Rect> GetTargetScreens(ScreenItem? selectedScreen)
     {
-        BtnStart.IsEnabled = false;
-        BtnStop.IsEnabled = true;
-        BtnAdd.IsEnabled = true;
-        BtnClear.IsEnabled = true;
-        CmbScreens.IsEnabled = false;
-        
-        var selectedScreen = CmbScreens.SelectedItem as ScreenItem;
         List<Rect> targetScreens = new List<Rect>();
         if (selectedScreen?.DisplayName.StartsWith("すべての画面") == true)
         {
@@ -129,6 +122,30 @@ public partial class MainWindow : Window
         {
             targetScreens.Add(new Rect(0,0,1920,1080)); // fallback
         }
+        return targetScreens;
+    }
+
+    private void CmbScreens_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (_manager != null)
+        {
+            _manager.ClearHamsters();
+            var selectedScreen = CmbScreens.SelectedItem as ScreenItem;
+            _manager.ScreenBoundsList = GetTargetScreens(selectedScreen);
+            _manager.AddHamster();
+        }
+    }
+
+    private void BtnStart_Click(object sender, RoutedEventArgs e)
+    {
+        BtnStart.IsEnabled = false;
+        BtnStop.IsEnabled = true;
+        BtnAdd.IsEnabled = true;
+        BtnClear.IsEnabled = true;
+        CmbScreens.IsEnabled = false;
+        
+        var selectedScreen = CmbScreens.SelectedItem as ScreenItem;
+        List<Rect> targetScreens = GetTargetScreens(selectedScreen);
 
         if (_manager == null)
         {
