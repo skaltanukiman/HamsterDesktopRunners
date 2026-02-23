@@ -151,7 +151,7 @@ public partial class MainWindow : Window
         BtnAdd.IsEnabled = true;
         BtnClear.IsEnabled = true;
         CmbScreens.IsEnabled = false;
-        CmbTypes.IsEnabled = false;
+        CmbTypes.IsEnabled = true;
         
         var selectedScreen = CmbScreens.SelectedItem as ScreenItem;
         List<Rect> targetScreens = GetTargetScreens(selectedScreen);
