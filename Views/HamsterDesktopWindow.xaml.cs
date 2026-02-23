@@ -22,7 +22,8 @@ namespace HamsterDesktopRunners.Views
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
         private HamsterManager _manager;
-        private BitmapImage _spriteSheet;
+        private BitmapImage _spriteSheetGolden;
+        private BitmapImage _spriteSheetDjungarian;
         private Rect _windowBounds;
 
         public HamsterDesktopWindow(HamsterManager manager, Rect windowBounds)
@@ -41,20 +42,40 @@ namespace HamsterDesktopRunners.Views
 
             // スプライトシートのロード(EmbeddedResource経由)
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            
+            // ゴールデン
             using (var stream = assembly.GetManifestResourceStream("HamsterDesktopRunners.Assets.hamster_sprite_sheet.png"))
             {
                 if (stream != null)
                 {
-                    _spriteSheet = new BitmapImage();
-                    _spriteSheet.BeginInit();
-                    _spriteSheet.StreamSource = stream;
-                    _spriteSheet.CacheOption = BitmapCacheOption.OnLoad;
-                    _spriteSheet.EndInit();
+                    _spriteSheetGolden = new BitmapImage();
+                    _spriteSheetGolden.BeginInit();
+                    _spriteSheetGolden.StreamSource = stream;
+                    _spriteSheetGolden.CacheOption = BitmapCacheOption.OnLoad;
+                    _spriteSheetGolden.EndInit();
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("リソースストリームの取得に失敗しました", "エラー", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-                    _spriteSheet = new BitmapImage(); // dummy fallback
+                    System.Windows.MessageBox.Show("ゴールデンハムスターのリソース取得に失敗しました", "エラー", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                    _spriteSheetGolden = new BitmapImage(); // dummy fallback
+                }
+            }
+
+            // ジャンガリアン
+            using (var stream = assembly.GetManifestResourceStream("HamsterDesktopRunners.Assets.hamster_djungarian.png"))
+            {
+                if (stream != null)
+                {
+                    _spriteSheetDjungarian = new BitmapImage();
+                    _spriteSheetDjungarian.BeginInit();
+                    _spriteSheetDjungarian.StreamSource = stream;
+                    _spriteSheetDjungarian.CacheOption = BitmapCacheOption.OnLoad;
+                    _spriteSheetDjungarian.EndInit();
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("ジャンガリアンハムスターのリソース取得に失敗しました", "エラー", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                    _spriteSheetDjungarian = new BitmapImage(); // dummy fallback
                 }
             }
         }
@@ -80,7 +101,14 @@ namespace HamsterDesktopRunners.Views
                     img.Width = hamster.ImageWidth;
                     img.Height = hamster.ImageHeight;
 
-                    img.Source = _spriteSheet;
+                    if (hamster.Type == HamsterType.Djungarian)
+                    {
+                        img.Source = _spriteSheetDjungarian;
+                    }
+                    else
+                    {
+                        img.Source = _spriteSheetGolden;
+                    }
 
                     // 左右反転
                     if (hamster.CurrentDirection == Hamster.Direction.Left)

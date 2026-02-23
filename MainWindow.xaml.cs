@@ -136,6 +136,14 @@ public partial class MainWindow : Window
         }
     }
 
+    private void CmbTypes_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (_manager != null)
+        {
+            _manager.SelectedType = CmbTypes.SelectedIndex == 1 ? HamsterType.Djungarian : HamsterType.Golden;
+        }
+    }
+
     private void BtnStart_Click(object sender, RoutedEventArgs e)
     {
         BtnStart.IsEnabled = false;
@@ -143,6 +151,7 @@ public partial class MainWindow : Window
         BtnAdd.IsEnabled = true;
         BtnClear.IsEnabled = true;
         CmbScreens.IsEnabled = false;
+        CmbTypes.IsEnabled = false;
         
         var selectedScreen = CmbScreens.SelectedItem as ScreenItem;
         List<Rect> targetScreens = GetTargetScreens(selectedScreen);
@@ -150,12 +159,14 @@ public partial class MainWindow : Window
         if (_manager == null)
         {
             _manager = new HamsterManager(targetScreens);
+            _manager.SelectedType = CmbTypes.SelectedIndex == 1 ? HamsterType.Djungarian : HamsterType.Golden;
             _manager.AddHamster(); // 初期で1匹追加
         }
         else
         {
             // 動的に変更された場合に対応
             _manager.ScreenBoundsList = targetScreens;
+            _manager.SelectedType = CmbTypes.SelectedIndex == 1 ? HamsterType.Djungarian : HamsterType.Golden;
         }
         
         // 既存のウィンドウを閉じる
@@ -178,6 +189,7 @@ public partial class MainWindow : Window
         BtnAdd.IsEnabled = false;
         BtnClear.IsEnabled = false;
         CmbScreens.IsEnabled = true;
+        CmbTypes.IsEnabled = true;
         
         _manager?.Stop();
         

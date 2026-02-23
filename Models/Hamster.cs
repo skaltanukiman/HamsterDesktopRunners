@@ -12,6 +12,7 @@ namespace HamsterDesktopRunners.Models
         public System.Windows.Vector Velocity { get; set; }
         public Direction CurrentDirection { get; set; }
         public State CurrentState { get; set; }
+        public HamsterType Type { get; }
         
         // 描画関連
         public int ImageWidth { get; } = 48;
@@ -26,9 +27,10 @@ namespace HamsterDesktopRunners.Models
         private static readonly Random Rnd = new Random();
         private int _stateTimer = 0;
 
-        public Hamster(double startX, double startY)
+        public Hamster(double startX, double startY, HamsterType type)
         {
             Position = new System.Windows.Point(startX, startY);
+            Type = type;
             CurrentDirection = Rnd.Next(2) == 0 ? Direction.Left : Direction.Right;
             CurrentState = State.Running;
             SetRandomVelocity();

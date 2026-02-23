@@ -12,6 +12,7 @@ namespace HamsterDesktopRunners.Services
         private DispatcherTimer _timer;
         private static readonly Random Rnd = new Random();
         public List<Rect> ScreenBoundsList { get; set; } = new List<Rect>();
+        public HamsterType SelectedType { get; set; } = HamsterType.Golden;
 
         public event EventHandler? HamstersUpdated;
 
@@ -43,7 +44,7 @@ namespace HamsterDesktopRunners.Services
             // 画面内のランダムな位置に追加
             double startX = bounds.Left + Rnd.NextDouble() * (Math.Max(50, bounds.Width - 60));
             double startY = bounds.Top + Rnd.NextDouble() * (Math.Max(50, bounds.Height - 60));
-            Hamsters.Add(new Hamster(startX, startY));
+            Hamsters.Add(new Hamster(startX, startY, SelectedType));
         }
 
         public void ClearHamsters()
