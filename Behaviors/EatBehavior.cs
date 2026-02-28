@@ -44,9 +44,10 @@ namespace HamsterDesktopRunners.Behaviors
                 return;
             }
 
-            if (hamster.CurrentState == Hamster.State.Running && hamster.StateTimer <= 0)
+            if (hamster.CurrentState == Hamster.State.Running)
             {
-                if (Rnd.NextDouble() < EatProbability)
+                // MoveBehaviorのStateTimerと競合しないよう、独立した低確率(約0.2%)で計算
+                if (Rnd.NextDouble() < 0.002)
                 {
                     hamster.CurrentState = Hamster.State.Eating;
                     hamster.EatTimer = EatDuration;

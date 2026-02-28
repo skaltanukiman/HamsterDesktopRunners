@@ -50,8 +50,8 @@ namespace HamsterDesktopRunners.Services
             {
                 var list = new List<IHamsterBehavior>
                 {
-                    new MoveBehavior { IsEnabled = _settings.IsBehaviorEnabled(type, "move") },
                     new EatBehavior  { IsEnabled = _settings.IsBehaviorEnabled(type, "eat")  },
+                    new MoveBehavior { IsEnabled = _settings.IsBehaviorEnabled(type, "move") },
                 };
                 _behaviors[type] = list;
             }

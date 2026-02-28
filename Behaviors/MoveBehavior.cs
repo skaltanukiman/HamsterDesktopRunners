@@ -84,24 +84,20 @@ namespace HamsterDesktopRunners.Behaviors
             hamster.CurrentDirection = hamster.Velocity.X < 0 ? Hamster.Direction.Left : Hamster.Direction.Right;
         }
 
-        private static bool IsInsideAnyScreen(Rect rect, List<Rect> screens)
+        private static bool IsInsideAnyScreen(System.Windows.Rect rect, List<System.Windows.Rect> screens)
+        {
+            return IsPointInScreens(new System.Windows.Point(rect.Left, rect.Top), screens) &&
+                   IsPointInScreens(new System.Windows.Point(rect.Right, rect.Top), screens) &&
+                   IsPointInScreens(new System.Windows.Point(rect.Left, rect.Bottom), screens) &&
+                   IsPointInScreens(new System.Windows.Point(rect.Right, rect.Bottom), screens);
+        }
+
+        private static bool IsPointInScreens(System.Windows.Point p, List<System.Windows.Rect> screens)
         {
             foreach (var s in screens)
             {
-                bool xIn = rect.Left >= s.Left - 1 && rect.Right <= s.Right + 1;
-                bool yIn = rect.Top >= s.Top - 1 && rect.Bottom <= s.Bottom + 1;
-                if (xIn && yIn) return true;
-            }
-            foreach (var s in screens)
-            {
-                var pts = new[]
-                {
-                    new System.Windows.Point(rect.Left, rect.Top),    new System.Windows.Point(rect.Right, rect.Top),
-                    new System.Windows.Point(rect.Left, rect.Bottom), new System.Windows.Point(rect.Right, rect.Bottom)
-                };
-                foreach (var p in pts)
-                    if (p.X >= s.Left - 1 && p.X <= s.Right + 1 && p.Y >= s.Top - 1 && p.Y <= s.Bottom + 1)
-                        return true;
+                if (p.X >= s.Left - 1 && p.X <= s.Right + 1 && p.Y >= s.Top - 1 && p.Y <= s.Bottom + 1)
+                    return true;
             }
             return false;
         }
