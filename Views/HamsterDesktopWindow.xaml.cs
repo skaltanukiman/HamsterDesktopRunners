@@ -90,25 +90,30 @@ namespace HamsterDesktopRunners.Views
 
         private void Manager_HamstersUpdated(object? sender, EventArgs e)
         {
-            // UIスレッドで描画更新
             Dispatcher.Invoke(() =>
             {
                 MainCanvas.Children.Clear();
 
                 foreach (var hamster in _manager.Hamsters)
                 {
+                    // ウィンドウ内の相対座標に変換
+                    double x = hamster.Position.X - _windowBounds.Left;
+                    double y = hamster.Position.Y - _windowBounds.Top;
+
+                    // カリング（画面外は描画しない）
+                    if (x + hamster.ImageWidth < 0 || x > _windowBounds.Width ||
+                        y + hamster.ImageHeight < 0 || y > _windowBounds.Height)
+                    {
+                        continue; // returnではなくcontinueで次のハムスターへ
+                    }
+
                     var img = new System.Windows.Controls.Image();
                     img.Width = hamster.ImageWidth;
                     img.Height = hamster.ImageHeight;
 
-                    if (hamster.Type == HamsterType.Djungarian)
-                    {
-                        img.Source = _spriteSheetDjungarian;
-                    }
-                    else
-                    {
-                        img.Source = _spriteSheetGolden;
-                    }
+                    img.Source = hamster.Type == HamsterType.Djungarian
+                        ? _spriteSheetDjungarian
+                        : _spriteSheetGolden;
 
                     // 左右反転
                     if (hamster.CurrentDirection == Hamster.Direction.Left)
@@ -117,31 +122,30 @@ namespace HamsterDesktopRunners.Views
                         img.RenderTransform = new ScaleTransform(-1, 1);
                     }
 
-                    // ピクセルアートをくっきり描画
                     RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.NearestNeighbor);
 
-                    // 走っている間は上下に少し跳ねさせる(Bobbing)
+                    // Bobbingアニメーション
                     double bobbingOffset = 0;
                     if (hamster.CurrentState == Hamster.State.Running)
-                    {
                         bobbingOffset = (hamster.CurrentFrame % 2 == 0) ? -2.0 : 0.0;
-                    }
-
-                    // ウィンドウ内の相対座標に変換
-                    double x = hamster.Position.X - _windowBounds.Left;
-                    double y = hamster.Position.Y - _windowBounds.Top;
-
-                    // 自身が担当する画面内に少しでも入っているかチェック（カリング）
-                    if (x + hamster.ImageWidth < 0 || x > _windowBounds.Width ||
-                        y + hamster.ImageHeight < 0 || y > _windowBounds.Height)
-                    {
-                        return;
-                    }
 
                     Canvas.SetLeft(img, x);
                     Canvas.SetTop(img, y + bobbingOffset);
-
                     MainCanvas.Children.Add(img);
+
+                    // Eating状態: 🌾絵文字をオーバーレイ表示
+                    if (hamster.CurrentState == Hamster.State.Eating)
+                    {
+                        var eatLabel = new System.Windows.Controls.TextBlock
+                        {
+                            Text = "🌾",
+                            FontSize = 20,
+                            IsHitTestVisible = false
+                        };
+                        Canvas.SetLeft(eatLabel, x + hamster.ImageWidth - 4);
+                        Canvas.SetTop(eatLabel, y - 22);
+                        MainCanvas.Children.Add(eatLabel);
+                    }
                 }
             });
         }
