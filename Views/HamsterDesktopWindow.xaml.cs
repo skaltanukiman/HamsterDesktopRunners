@@ -134,12 +134,24 @@ namespace HamsterDesktopRunners.Views
                         ? _spriteSheetDjungarian
                         : _spriteSheetGolden;
 
+                    var transformGroup = new TransformGroup();
+
+                    // Eating中はハムスター本体を潰したり伸ばしたりしてモグモグ表現 (Squash & Stretch)
+                    if (hamster.CurrentState == Hamster.State.Eating)
+                    {
+                        double scaleX = hamster.CurrentFrame == 1 ? 1.03 : 0.97;
+                        double scaleY = hamster.CurrentFrame == 1 ? 0.97 : 1.03;
+                        transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY));
+                    }
+
                     // 左右反転
                     if (hamster.CurrentDirection == Hamster.Direction.Left)
                     {
-                        img.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
-                        img.RenderTransform = new ScaleTransform(-1, 1);
+                        transformGroup.Children.Add(new ScaleTransform(-1, 1));
                     }
+
+                    img.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+                    img.RenderTransform = transformGroup;
 
                     RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.NearestNeighbor);
 
@@ -152,7 +164,6 @@ namespace HamsterDesktopRunners.Views
                     Canvas.SetTop(img, y + bobbingOffset);
                     MainCanvas.Children.Add(img);
 
-                    // Eating状態: 🌾絵文字をオーバーレイ表示
                     // Eating状態: ひまわりの種を描画し、咀嚼に合わせて上下させる
                     if (hamster.CurrentState == Hamster.State.Eating)
                     {
@@ -162,20 +173,26 @@ namespace HamsterDesktopRunners.Views
                         seedImg.Source = _seedImage;
                         RenderOptions.SetBitmapScalingMode(seedImg, BitmapScalingMode.NearestNeighbor);
 
+                        // 食事の進行度に合わせて種を徐々に小さくする（食べ終わる表現）
+                        double progress = Math.Max(0.0, (double)hamster.EatTimer / 120.0);
+                        double seedScale = Math.Max(0.2, progress);
+                        seedImg.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+                        seedImg.RenderTransform = new ScaleTransform(seedScale, seedScale);
+
                         // 咀嚼アニメ（フレーム0と1で交互に上下する）に連動
-                        double chewOffset = hamster.CurrentFrame == 1 ? 2.0 : 0.0;
+                        double chewOffset = hamster.CurrentFrame == 1 ? 2.0 : -1.0;
                         
-                        // 画像の向きに合わせて種の位置を口元へ調整
+                        // 画像の向きに合わせて種の位置を口元寄りへ調整 (48x48の画像の中心近く)
                         if (hamster.CurrentDirection == Hamster.Direction.Left)
                         {
-                            Canvas.SetLeft(seedImg, x - 8);
+                            Canvas.SetLeft(seedImg, x + 8);
                         }
                         else
                         {
-                            Canvas.SetLeft(seedImg, x + hamster.ImageWidth - 8);
+                            Canvas.SetLeft(seedImg, x + hamster.ImageWidth - 24);
                         }
                         
-                        Canvas.SetTop(seedImg, y + hamster.ImageHeight - 20 + chewOffset);
+                        Canvas.SetTop(seedImg, y + hamster.ImageHeight - 24 + chewOffset);
                         MainCanvas.Children.Add(seedImg);
                     }
                 }
