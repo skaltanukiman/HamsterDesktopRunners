@@ -185,11 +185,11 @@ namespace HamsterDesktopRunners.Views
                         // 画像の向きに合わせて種の位置を口元寄りへ調整 (48x48の画像の中心近く)
                         if (hamster.CurrentDirection == Hamster.Direction.Left)
                         {
-                            Canvas.SetLeft(seedImg, x + 8);
+                            Canvas.SetLeft(seedImg, x + 30);
                         }
                         else
                         {
-                            Canvas.SetLeft(seedImg, x + hamster.ImageWidth - 24);
+                            Canvas.SetLeft(seedImg, x + hamster.ImageWidth - 50);
                         }
                         
                         Canvas.SetTop(seedImg, y + hamster.ImageHeight - 24 + chewOffset);
