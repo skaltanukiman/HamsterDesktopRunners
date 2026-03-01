@@ -24,6 +24,7 @@ namespace HamsterDesktopRunners.Views
         private HamsterManager _manager;
         private BitmapImage _spriteSheetGolden;
         private BitmapImage _spriteSheetDjungarian;
+        private BitmapImage _seedImage;
         private Rect _windowBounds;
 
         public HamsterDesktopWindow(HamsterManager manager, Rect windowBounds)
@@ -76,6 +77,24 @@ namespace HamsterDesktopRunners.Views
                 {
                     System.Windows.MessageBox.Show("ジャンガリアンハムスターのリソース取得に失敗しました", "エラー", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                     _spriteSheetDjungarian = new BitmapImage(); // dummy fallback
+                }
+            } // <- Djuingarianのusingブロックの閉じカッコ
+            
+            // 種の画像
+            using (var stream = assembly.GetManifestResourceStream("HamsterDesktopRunners.Assets.sunflower_seed.png"))
+            {
+                if (stream != null)
+                {
+                    _seedImage = new BitmapImage();
+                    _seedImage.BeginInit();
+                    _seedImage.StreamSource = stream;
+                    _seedImage.CacheOption = BitmapCacheOption.OnLoad;
+                    _seedImage.EndInit();
+                }
+                else
+                {
+                    // フォールバック
+                    _seedImage = new BitmapImage();
                 }
             }
         }
@@ -134,17 +153,30 @@ namespace HamsterDesktopRunners.Views
                     MainCanvas.Children.Add(img);
 
                     // Eating状態: 🌾絵文字をオーバーレイ表示
+                    // Eating状態: ひまわりの種を描画し、咀嚼に合わせて上下させる
                     if (hamster.CurrentState == Hamster.State.Eating)
                     {
-                        var eatLabel = new System.Windows.Controls.TextBlock
+                        var seedImg = new System.Windows.Controls.Image();
+                        seedImg.Width = 16;
+                        seedImg.Height = 16;
+                        seedImg.Source = _seedImage;
+                        RenderOptions.SetBitmapScalingMode(seedImg, BitmapScalingMode.NearestNeighbor);
+
+                        // 咀嚼アニメ（フレーム0と1で交互に上下する）に連動
+                        double chewOffset = hamster.CurrentFrame == 1 ? 2.0 : 0.0;
+                        
+                        // 画像の向きに合わせて種の位置を口元へ調整
+                        if (hamster.CurrentDirection == Hamster.Direction.Left)
                         {
-                            Text = "🌾",
-                            FontSize = 20,
-                            IsHitTestVisible = false
-                        };
-                        Canvas.SetLeft(eatLabel, x + hamster.ImageWidth - 4);
-                        Canvas.SetTop(eatLabel, y - 22);
-                        MainCanvas.Children.Add(eatLabel);
+                            Canvas.SetLeft(seedImg, x - 8);
+                        }
+                        else
+                        {
+                            Canvas.SetLeft(seedImg, x + hamster.ImageWidth - 8);
+                        }
+                        
+                        Canvas.SetTop(seedImg, y + hamster.ImageHeight - 20 + chewOffset);
+                        MainCanvas.Children.Add(seedImg);
                     }
                 }
             });

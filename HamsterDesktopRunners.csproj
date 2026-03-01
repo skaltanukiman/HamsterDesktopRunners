@@ -12,6 +12,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\hamster_sprite_sheet.png" />
     <EmbeddedResource Include="Assets\hamster_djungarian.png" />
+    <EmbeddedResource Include="Assets\sunflower_seed.png" />
   </ItemGroup>
 
 </Project>
