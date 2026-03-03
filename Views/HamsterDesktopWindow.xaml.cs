@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,12 +27,17 @@ namespace HamsterDesktopRunners.Views
         private BitmapImage _spriteSheetDjungarian;
         private BitmapImage _seedImage;
         private Rect _windowBounds;
+        private readonly ISettingsRepository _settingsRepo;
+        // 種類別の種オフセットキャッシュ
+        private Dictionary<HamsterType, (int leftX, int rightX, int y)> _seedOffsets = new();
 
-        public HamsterDesktopWindow(HamsterManager manager, Rect windowBounds)
+        public HamsterDesktopWindow(HamsterManager manager, Rect windowBounds, ISettingsRepository settingsRepo)
         {
             InitializeComponent();
             _manager = manager;
             _windowBounds = windowBounds;
+            _settingsRepo = settingsRepo;
+            RefreshSeedOffsets();
             
             // 指定されたRectに合わせる
             this.Left = windowBounds.Left;
@@ -182,21 +188,33 @@ namespace HamsterDesktopRunners.Views
                         // 咀嚼アニメ（フレーム0と1で交互に上下する）に連動
                         double chewOffset = hamster.CurrentFrame == 1 ? 2.0 : -1.0;
                         
-                        // 画像の向きに合わせて種の位置を口元寄りへ調整 (48x48の画像の中心近く)
+                        // 種類別のオフセット設定に基づいて種の位置を決定
+                        var (seedLeftX, seedRightX, seedY) = _seedOffsets.TryGetValue(hamster.Type, out var o) ? o : (30, -50, -24);
                         if (hamster.CurrentDirection == Hamster.Direction.Left)
                         {
-                            Canvas.SetLeft(seedImg, x + 30);
+                            Canvas.SetLeft(seedImg, x + seedLeftX);
                         }
                         else
                         {
-                            Canvas.SetLeft(seedImg, x + hamster.ImageWidth - 50);
+                            Canvas.SetLeft(seedImg, x + hamster.ImageWidth + seedRightX);
                         }
                         
-                        Canvas.SetTop(seedImg, y + hamster.ImageHeight - 24 + chewOffset);
+                        Canvas.SetTop(seedImg, y + hamster.ImageHeight + seedY + chewOffset);
                         MainCanvas.Children.Add(seedImg);
                     }
                 }
             });
+        }
+
+        /// <summary>設定から種オフセット値を再読み込みする</summary>
+        public void RefreshSeedOffsets()
+        {
+            var settings = _settingsRepo.Load();
+            _seedOffsets.Clear();
+            foreach (HamsterType type in Enum.GetValues(typeof(HamsterType)))
+            {
+                _seedOffsets[type] = settings.GetSeedOffset(type);
+            }
         }
 
         protected override void OnClosed(EventArgs e)

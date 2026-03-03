@@ -171,7 +171,7 @@ public partial class MainWindow : Window
 
         var drawArea = new Rect(SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop,
                                 SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
-        var desktopWindow = new HamsterDesktopWindow(_manager, drawArea);
+        var desktopWindow = new HamsterDesktopWindow(_manager, drawArea, _settingsRepo);
         desktopWindow.Show();
         _windows.Add(desktopWindow);
 

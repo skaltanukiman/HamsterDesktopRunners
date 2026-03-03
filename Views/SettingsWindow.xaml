@@ -1,39 +1,97 @@
 <Window x:Class="HamsterDesktopRunners.Views.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="設定" Height="420" Width="420"
+        Title="設定" Height="560" Width="460"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         ShowInTaskbar="False">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Text="ハムスター行動設定" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
 
         <!-- ハムスター種別タブ -->
-        <TabControl x:Name="TabTypes" Grid.Row="1" Height="260">
+        <TabControl x:Name="TabTypes" Grid.Row="1">
             <TabItem Header="ゴールデンハムスター" x:Name="TabGolden">
-                <StackPanel Margin="10">
-                    <TextBlock Text="有効にする行動を選択してください:" Margin="0,5,0,10" FontSize="13"/>
-                    <CheckBox x:Name="ChkGoldenMove" Content="通常移動 (Move)" FontSize="13" Margin="0,5"
-                              Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
-                    <CheckBox x:Name="ChkGoldenEat"  Content="食事 (Eat) — 時々立ち止まって食べる" FontSize="13" Margin="0,5"
-                              Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
-                </StackPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="有効にする行動を選択してください:" Margin="0,5,0,10" FontSize="13"/>
+                        <CheckBox x:Name="ChkGoldenMove" Content="通常移動 (Move)" FontSize="13" Margin="0,5"
+                                  Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
+                        <CheckBox x:Name="ChkGoldenEat"  Content="食事 (Eat) — 時々立ち止まって食べる" FontSize="13" Margin="0,5"
+                                  Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
+
+                        <Separator Margin="0,15,0,10"/>
+                        <TextBlock Text="🌻 ひまわりの種の位置調整" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+                        <TextBlock FontSize="12" Margin="0,4,0,2">
+                            <Run Text="左向き時 Xオフセット: "/>
+                            <Run x:Name="LblGoldenLeftX" Text="30"/>
+                        </TextBlock>
+                        <Slider x:Name="SldGoldenLeftX" Minimum="-20" Maximum="60" Value="30"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SeedSlider_ValueChanged"/>
+
+                        <TextBlock FontSize="12" Margin="0,4,0,2">
+                            <Run Text="右向き時 Xオフセット: "/>
+                            <Run x:Name="LblGoldenRightX" Text="-50"/>
+                        </TextBlock>
+                        <Slider x:Name="SldGoldenRightX" Minimum="-60" Maximum="20" Value="-50"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SeedSlider_ValueChanged"/>
+
+                        <TextBlock FontSize="12" Margin="0,4,0,2">
+                            <Run Text="Yオフセット: "/>
+                            <Run x:Name="LblGoldenY" Text="-24"/>
+                        </TextBlock>
+                        <Slider x:Name="SldGoldenY" Minimum="-40" Maximum="0" Value="-24"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SeedSlider_ValueChanged"/>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="ジャンガリアンハムスター" x:Name="TabDjungarian">
-                <StackPanel Margin="10">
-                    <TextBlock Text="有効にする行動を選択してください:" Margin="0,5,0,10" FontSize="13"/>
-                    <CheckBox x:Name="ChkDjungarianMove" Content="通常移動 (Move)" FontSize="13" Margin="0,5"
-                              Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
-                    <CheckBox x:Name="ChkDjungarianEat"  Content="食事 (Eat) — 時々立ち止まって食べる" FontSize="13" Margin="0,5"
-                              Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
-                </StackPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="有効にする行動を選択してください:" Margin="0,5,0,10" FontSize="13"/>
+                        <CheckBox x:Name="ChkDjungarianMove" Content="通常移動 (Move)" FontSize="13" Margin="0,5"
+                                  Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
+                        <CheckBox x:Name="ChkDjungarianEat"  Content="食事 (Eat) — 時々立ち止まって食べる" FontSize="13" Margin="0,5"
+                                  Checked="BehaviorCheck_Changed" Unchecked="BehaviorCheck_Changed"/>
+
+                        <Separator Margin="0,15,0,10"/>
+                        <TextBlock Text="🌻 ひまわりの種の位置調整" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+                        <TextBlock FontSize="12" Margin="0,4,0,2">
+                            <Run Text="左向き時 Xオフセット: "/>
+                            <Run x:Name="LblDjungarianLeftX" Text="30"/>
+                        </TextBlock>
+                        <Slider x:Name="SldDjungarianLeftX" Minimum="-20" Maximum="60" Value="30"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SeedSlider_ValueChanged"/>
+
+                        <TextBlock FontSize="12" Margin="0,4,0,2">
+                            <Run Text="右向き時 Xオフセット: "/>
+                            <Run x:Name="LblDjungarianRightX" Text="-50"/>
+                        </TextBlock>
+                        <Slider x:Name="SldDjungarianRightX" Minimum="-60" Maximum="20" Value="-50"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SeedSlider_ValueChanged"/>
+
+                        <TextBlock FontSize="12" Margin="0,4,0,2">
+                            <Run Text="Yオフセット: "/>
+                            <Run x:Name="LblDjungarianY" Text="-24"/>
+                        </TextBlock>
+                        <Slider x:Name="SldDjungarianY" Minimum="-40" Maximum="0" Value="-24"
+                                IsSnapToTickEnabled="True" TickFrequency="1"
+                                ValueChanged="SeedSlider_ValueChanged"/>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
 

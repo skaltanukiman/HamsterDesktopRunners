@@ -38,5 +38,16 @@ namespace HamsterDesktopRunners.Models
             var bSetting = typeSetting.Behaviors.Find(b => b.BehaviorId == behaviorId);
             return bSetting?.IsEnabled ?? true;
         }
+
+        /// <summary>
+        /// 指定種別のひまわりの種オフセット値を返す。設定がなければデフォルト値を返す。
+        /// </summary>
+        public (int leftX, int rightX, int y) GetSeedOffset(HamsterType type)
+        {
+            var typeSetting = HamsterSettings.Find(s => s.Type == type);
+            if (typeSetting == null)
+                return (30, -50, -24);
+            return (typeSetting.SeedOffsetLeftX, typeSetting.SeedOffsetRightX, typeSetting.SeedOffsetY);
+        }
     }
 }
