@@ -11,6 +11,9 @@ HamsterDesktopRunners は、C# / WPF を使用して開発した Windows デス�
 
 ハムスターの表示・移動・追加・削除などを行い、デスクトップ上にちょっとした癒しを追加することを目的としています。
 
+### 動作イメージ
+![HamsterDesktopRunners Demo](./docs/gif/hamster_demo.gif)
+
 ## 開発アプローチ
 
 本アプリケーションは、Antigravity を活用した Vibe Coding により開発しました。
