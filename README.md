@@ -11,6 +11,18 @@ HamsterDesktopRunners は、C# / WPF を使用して開発した Windows デス�
 
 ハムスターの表示・移動・追加・削除などを行い、デスクトップ上にちょっとした癒しを追加することを目的としています。
 
+## 登場ハムスター
+
+HamsterDesktopRunners では、
+種類の異なるハムスターを選択してデスクトップ上に表示できます。
+
+- ジャンガリアンハムスター
+- ゴールデンハムスター
+
+<p align="left">
+  <img src="./docs/img/hamsters.png" width="400">
+</p>
+
 ### 動作イメージ
 ![HamsterDesktopRunners Demo](./docs/gif/hamster_demo.gif)
 
